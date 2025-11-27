@@ -2,10 +2,10 @@
 
 import React from "react";
 
-// ✅ courses에 기본값 [] 할당 및 onEdit, onDelete props 유지
+// ✅ courses에 기본값 [] 할당
 function CourseTable({ courses = [], loading, onEdit, onDelete }) {
   
-  let tbodyContent;
+  let tbodyContent; // 렌더링될 내용을 담을 변수 선언
 
   if (loading) {
     tbodyContent = (
@@ -14,7 +14,7 @@ function CourseTable({ courses = [], loading, onEdit, onDelete }) {
       </tr>
     );
   } else if (courses.length === 0) {
-    // ✅ 데이터가 없을 때의 메시지
+    // ✅ 데이터가 없을 때의 메시지 (이 부분이 테이블 구조를 벗어나지 않도록 명확하게 분리)
     tbodyContent = (
       <tr>
         <td colSpan="9" className="text-center">표시할 데이터가 없습니다.</td>
