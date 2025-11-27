@@ -1,13 +1,245 @@
+/* src/index.css */
+/* 기본 스타일 */
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* ----------------------------------- */
+/* 1. 상단 제목 영역 (이미지의 "나의 수강 과목" 부분) */
+.top-header-banner {
+  margin-bottom: 0;
+  background-color: #e0f2f7; /* 이미지와 유사한 연한 파란색 계열 */
+  color: #333;
+  padding: 30px 0 15px 0;
+  text-align: center;
+  border-radius: 0;
+}
+
+.top-header-banner h1 {
+  font-size: 36px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  color: #333; 
+  text-shadow: 1px 1px 1px #fff;
+}
+.top-header-banner p {
+  font-size: 16px;
+  margin-top: 5px;
+  color: #555;
+}
+
+/* ----------------------------------- */
+/* 2. 메인 내비게이션 바 (Home, Nostyle, Example, About 탭 부분) */
+.main-nav-tabs {
+  margin-bottom: 30px; 
+  border-radius: 0;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  padding: 0 15px;
+  display: flex; /* Flexbox로 가로 정렬 */
+}
+
+.main-nav-tabs .nav-link {
+  padding: 10px 15px;
+  color: #333;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.main-nav-tabs .nav-link:hover,
+.main-nav-tabs .nav-link.active {
+  color: #337ab7; 
+  border-bottom: 2px solid #337ab7;
+}
+
+/* 3. 테이블 제목 */
+.course-list-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* 4. 테이블 스타일 */
+.table {
+  border-collapse: collapse;
+}
+.table th {
+  background-color: #f5f5f5; 
+  border-bottom: 2px solid #ddd;
+}
+.table td {
+  border-top: 1px solid #eee;
+}
+
+/* 기존 .table>tbody>tr>td>a 스타일 유지 (상세 페이지 링크) */
+.table>tbody>tr>td>a {
+  font-weight: bold;
+  color: #333;
+}
+.table>tbody>tr>td>a:hover {
+  color: #337ab7;
+  text-decoration: none;
+}
+
+
+/* ----------------------------------- */
+/* 모바일 반응형 스타일 */
+
+@media (max-width: 768px) {
+.table-responsive {
+  border: none;
+}
+.table thead {
+  display: none;
+}
+
+.table tbody tr {
+  display: block;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+}
+
+.table tbody td {
+  display: block;
+  text-align: right;
+  padding: 8px;
+  border-bottom: 1px dotted #ccc;
+}
+
+.table tbody td:last-child {
+  border-bottom: none;
+}
+
+.table tbody td:before {
+  content: attr(data-label);
+  float: left;
+  font-weight: bold;
+  text-align: left;
+}
+
+.custom-form .form-group {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.custom-form label {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 5px;
+}
+
+.custom-form .buttons {
+  padding-left: 0;
+  justify-content: flex-end; /* 모바일에서 버튼 오른쪽 정렬 */
+}
+
+.name {
+  font-size: 28px;
+}
+.Qua, .ans {
+  font-size: 20px;
+}
+}
+
+/* ----------------------------------- */
+/* Form 및 Detail Page 스타일 */
+
+.add-class-page {
+  font-size: 15px;
+  text-align: center;
+}
+.add-class-page h2 {
+  margin-bottom: 0;
+  margin-top: 0;
+  background-color: lightblue;
+  color: white;
+  padding: 5%;
+  padding-bottom: 2%;
+  font-size: 50px;
+  text-align: center;
+  font-weight: bold;
+}
+.add-class-page p {
+  margin-bottom: 0;
+  background-color: lightblue;
+  color: white;
+  font-size: 15px;
+  text-align: center;
+  padding: 5%;
+}
+
+.custom-form {
+  max-width: 500px;
+  margin: 0 auto;
+  white-space: nowrap;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.custom-form label {
+  text-align: left;
+  white-space: nowrap;
+  min-width: 150px;
+}
+
+.buttons {
+  padding-left: 170px;
+}
+
+.detail-class-page {
+  font-size: 15px;
+  text-align: center;
+}
+.detail-class-page h2 {
+  margin-bottom: 0;
+  margin-top: 0;
+  background-color: lightblue;
+  color: white;
+  padding: 5%;
+  padding-bottom: 2%;
+  font-size: 50px;
+  text-align: center;
+  font-weight: bold;
+}
+.detail-class-page p {
+  margin-bottom: 0;
+  background-color: lightblue;
+  color: white;
+  font-size: 15px;
+  text-align: center;
+  padding: 5%;
+}
+
+.name {
+  margin-left: 10%;
+  color: darkblue;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.Qua {
+  margin-left: 10%;
+  color: darkcyan;
+  font-size: 30px;
+  font-weight: bold;
+  background-color: beige;
+  margin-right: 0;
+}
+
+.ans {
+  color: gray;
+  font-size: 30px;
+  font-weight: bold;
+  border: 1px solid beige;
+  margin-left: 0;
 }
