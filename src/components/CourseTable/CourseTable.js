@@ -19,9 +19,14 @@ function CourseTable({ courses = [], loading, onEdit, onDelete, onViewDetail }) 
     tbodyContent = courses.map(course => (
       <tr key={course.id}>
         <td>
-          <a href="#" onClick={(e) => { e.preventDefault(); onViewDetail(course); }}>
-            {course.name}
-          </a>
+        <td>
+        <button 
+          className="btn btn-link p-0" 
+          onClick={() => onViewDetail(course)}
+        >
+          {course.name}
+        </button>
+      </td>
         </td>
         <td>{course.code}</td>
         <td>{course.professor}</td>
