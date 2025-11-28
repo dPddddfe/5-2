@@ -9,8 +9,9 @@ import { API_URL } from "../../api";
 function ShowList() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const navigate = useNavigate(); 
+  const [showModal, setShowModal] = useState(false);
+  const [editCourse, setEditCourse] = useState(null); // 수정 대상
+  const navigate = useNavigate();
 
   const fetchCourses = useCallback(async () => {
     setLoading(true);
@@ -41,33 +42,36 @@ function ShowList() {
     }
   };
 
-  // ✅ 상세보기 핸들러 정의
-  const handleViewDetail = (course) => {
-    navigate(`/detail/${course.id}`);
+  const handleEdit = (course) => {
+    setEditCourse(course); // 수정할 데이터 저장
+    setShowModal(true);
   };
 
-  const handleEdit = (course) => {
-    navigate(`/update/${course.id}`);
+  const handleViewDetail = (course) => {
+    navigate(`/detail/${course.id}`);
   };
 
   return (
     <div className="container-fluid p-0">
       <Header />
       <h1>나의 수강 과목</h1>
-      <Button onClick={() => setShowCreateModal(true)}>+ 강의 추가</Button>
+      <Button className="mb-3" onClick={() => { setEditCourse(null); setShowModal(true); }}>
+        + 강의 추가
+      </Button>
 
-      <CourseTable 
-        courses={courses} 
-        loading={loading} 
+      <CourseTable
+        courses={courses}
+        loading={loading}
         onEdit={handleEdit}
         onDelete={handleDelete}
-        onViewDetail={handleViewDetail} // ✅ 핸들러 연결
+        onViewDetail={handleViewDetail}
       />
 
       <CreateCourseModal
-        show={showCreateModal}
-        handleClose={() => setShowCreateModal(false)}
+        show={showModal}
+        handleClose={() => setShowModal(false)}
         fetchCourses={fetchCourses}
+        editCourse={editCourse} // 수정 대상 전달
       />
     </div>
   );

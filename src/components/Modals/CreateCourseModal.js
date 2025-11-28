@@ -1,74 +1,97 @@
-// src/components/CourseTable/CourseTable.js
+import React, { useState, useEffect } from "react";
+import { Modal, Button, Form } from "react-bootstrap";
+import { API_URL } from "../../api";
 
-import React from "react";
+function CreateCourseModal({ show, handleClose, fetchCourses, editCourse }) {
+  const [form, setForm] = useState({
+    name: "",
+    code: "",
+    professor: "",
+    major: "",
+    credits: "",
+    place: "",
+    time: "",
+    grade: ""
+  });
 
-// ✅ courses에 기본값 [] 할당
-function CourseTable({ courses = [], loading, onEdit, onDelete }) {
-  
-  let tbodyContent; // 렌더링될 내용을 담을 변수 선언
+  useEffect(() => {
+    if (editCourse) {
+      setForm({ ...editCourse }); // 수정 시 기존 데이터 채움
+    } else {
+      setForm({
+        name: "",
+        code: "",
+        professor: "",
+        major: "",
+        credits: "",
+        place: "",
+        time: "",
+        grade: ""
+      });
+    }
+  }, [editCourse]);
 
-  if (loading) {
-    tbodyContent = (
-      <tr>
-        <td colSpan="9" className="text-center">Loading...</td>
-      </tr>
-    );
-  } else if (courses.length === 0) {
-    // ✅ 데이터가 없을 때의 메시지 (이 부분이 테이블 구조를 벗어나지 않도록 명확하게 분리)
-    tbodyContent = (
-      <tr>
-        <td colSpan="9" className="text-center">표시할 데이터가 없습니다.</td>
-      </tr>
-    );
-  } else {
-    // ✅ 데이터가 있을 때 목록을 매핑
-    tbodyContent = courses.map(course => (
-      <tr key={course.id}>
-        <td>{course.name}</td>
-        <td>{course.code}</td>
-        <td>{course.professor}</td>
-        <td>{course.major}</td>
-        <td>{course.credits}</td>
-        <td>{course.place}</td>
-        <td>{course.time}</td>
-        <td>{course.grade}</td>
-        <td>
-          <button
-            className="btn btn-sm btn-success me-2"
-            onClick={() => onEdit(course)}
-          >수정</button>
-          <button
-            className="btn btn-sm btn-danger"
-            onClick={() => onDelete(course.id)}
-          >삭제</button>
-        </td>
-      </tr>
-    ));
-  }
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const method = editCourse ? "PUT" : "POST";
+      const url = editCourse ? `${API_URL}/${editCourse.id}` : API_URL;
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (res.ok) {
+        fetchCourses();
+        handleClose();
+      } else {
+        alert("오류 발생");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
-    <div className="table-responsive">
-      <table className="table table-hover">
-        <thead>
-          <tr>
-            <th>과목명</th>
-            <th>과목 코드</th>
-            <th>담당 교수</th>
-            <th>개설 학부</th>
-            <th>학점</th>
-            <th>강의 장소</th>
-            <th>강의 시간</th>
-            <th>성적</th>
-            <th>관리</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* ✅ 최종적으로 계산된 내용만 렌더링 */}
-          {tbodyContent} 
-        </tbody>
-      </table>
-    </div>
+    <Modal show={show} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>{editCourse ? "강의 수정" : "강의 추가"}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          {["name","code","professor","major","credits","place","time","grade"].map(field => (
+            <Form.Group className="mb-2" key={field}>
+              <Form.Label>{field === "name" ? "과목명" :
+                          field === "code" ? "과목 코드" :
+                          field === "professor" ? "담당 교수" :
+                          field === "major" ? "개설 학부" :
+                          field === "credits" ? "학점" :
+                          field === "place" ? "강의 장소" :
+                          field === "time" ? "강의 시간" :
+                          "성적"}</Form.Label>
+              <Form.Control
+                type="text"
+                name={field}
+                value={form[field]}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          ))}
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>닫기</Button>
+        <Button variant="primary" onClick={handleSubmit}>
+          {editCourse ? "수정 완료" : "추가"}
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 }
 
-export default CourseTable;
+export default CreateCourseModal;
