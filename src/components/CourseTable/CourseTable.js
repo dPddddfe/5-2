@@ -29,13 +29,15 @@ function CourseTable({ courses, loading, onEdit, onDelete, onViewDetail }) {
           {!loading && courses.map(course => (
             <tr key={course.id}>
               <td data-label="과목명">
-                <a 
-                  href="#" 
-                  onClick={(e) => { e.preventDefault(); onViewDetail(course); }} 
-                  className="text-decoration-none"
+              <td data-label="과목명">
+                <button 
+                  type="button"
+                  onClick={() => onViewDetail(course)}
+                  className="btn btn-link p-0 text-decoration-none"
                 >
                   {course.name}
-                </a>
+                </button>
+              </td>
               </td>
               <td data-label="과목 코드">{course.code}</td>
               <td data-label="담당 교수">{course.professor}</td>
