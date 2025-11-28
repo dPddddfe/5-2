@@ -53,15 +53,14 @@ function ShowList() {
   };
 
 
-  // ✅ 수정 페이지로 이동 (ID를 쿼리 파라미터로 전달)
   const handleEdit = (course) => {
-    navigate(`/update?id=${course.id}`); 
+    navigate(`/update/${course.id}`);
   };
-
-  // ✅ 상세 페이지로 이동 (ID를 쿼리 파라미터로 전달)
-  const handleViewDetail = (course) => {
-    navigate(`/detail?id=${course.id}`); 
+  
+  const handleDetail = (course) => {
+    navigate(`/detail/${course.id}`);
   };
+  
 
   return (
     <div className="container-fluid p-0">

@@ -4,6 +4,9 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 import { API_URL } from "../../api"; // ✅ 경로 수정됨
+import { useParams } from "react-router-dom";
+const { id } = useParams();
+
 
 function DetailPage() {
   const [searchParams] = useSearchParams();
