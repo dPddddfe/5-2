@@ -1,68 +1,62 @@
-// src/components/Pages/UpdatePage.js
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Header from "../Header/Header";
 import { API_URL } from "../../api";
 
 function UpdatePage() {
-  const { id } = useParams();
+  const { id } = useParams(); // ✅ 컴포넌트 안에서 useParams 호출
   const navigate = useNavigate();
-  const [course, setCourse] = useState({
-    name: "",
-    code: "",
-    professor: "",
-    major: "",
-    credits: "",
-    place: "",
-    time: "",
-    grade: "",
-  });
+  const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(true);
+  //const editCountRef = useRef(0);
+
+  const fetchCourse = useCallback(async () => {
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setFormData(data);
+      } else navigate("/list");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [id, navigate]);
 
   useEffect(() => {
-    const fetchCourse = async () => {
-      try {
-        const res = await fetch(`${API_URL}/${id}`);
-        if (res.ok) {
-          const data = await res.json();
-          setCourse(data);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
     fetchCourse();
-  }, [id]);
+  }, [fetchCourse]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCourse((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(course),
-      });
-      if (res.ok) navigate("/showlist");
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  if (!id) return <div><Header /><p>수정할 ID 필요</p></div>;
+  if (loading) return <div><Header /><p>로딩 중...</p></div>;
 
   return (
-    <div className="container">
+    <div className="container add-class-page">
+      <Header />
       <h2>강의 수정</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          name="name"
-          value={course.name}
-          onChange={handleChange}
-          placeholder="과목명"
-        />
-        {/* 나머지 입력 필드도 동일 */}
-        <button type="submit">저장</button>
+      <form>
+        {Object.keys(formData).filter(k => k !== "id").map(key => (
+          <div key={key}>
+            <label>{key}</label>
+            <input 
+              type={key === "credits" ? "number" : "text"}
+              name={key}
+              value={formData[key] || ""}
+              onChange={handleChange}
+            />
+          </div>
+        ))}
       </form>
     </div>
   );
