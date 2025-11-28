@@ -10,13 +10,13 @@ import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-root.render(
+root.render( 
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<Navigate to="/list" replace />} />
       <Route path="/list" element={<ShowList />} />
-      <Route path="/detail" element={<DetailPage />} />
-      <Route path="/update" element={<UpdatePage />} />
+      <Route path="/detail/:id" element={<DetailPage />} />
+      <Route path="/update/:id" element={<UpdatePage />} />
     </Routes>
   </BrowserRouter>
 );
