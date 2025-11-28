@@ -1,63 +1,56 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import Header from "../Header/Header";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { API_URL } from "../../api";
+import { Button, Form } from "react-bootstrap";
 
 function UpdatePage() {
-  const { id } = useParams(); // ✅ 컴포넌트 안에서 useParams 호출
+  const { id } = useParams();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(true);
-  //const editCountRef = useRef(0);
-
-  const fetchCourse = useCallback(async () => {
-    if (!id) {
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await fetch(`${API_URL}/${id}`);
-      if (res.ok) {
-        const data = await res.json();
-        setFormData(data);
-      } else navigate("/list");
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }, [id, navigate]);
+  const [form, setForm] = useState({
+    name: "", code: "", professor: "", major: "",
+    credits: "", place: "", time: "", grade: ""
+  });
 
   useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const res = await fetch(`${API_URL}/${id}`);
+        if (res.ok) setForm(await res.json());
+      } catch (err) { console.error(err); }
+    };
     fetchCourse();
-  }, [fetchCourse]);
+  }, [id]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async () => {
+    try {
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form)
+      });
+      if (res.ok) navigate("/");
+    } catch (err) { console.error(err); }
   };
 
-  if (!id) return <div><Header /><p>수정할 ID 필요</p></div>;
-  if (loading) return <div><Header /><p>로딩 중...</p></div>;
-
   return (
-    <div className="container add-class-page">
-      <Header />
-      <h2>강의 수정</h2>
-      <form>
-        {Object.keys(formData).filter(k => k !== "id").map(key => (
-          <div key={key}>
-            <label>{key}</label>
-            <input 
-              type={key === "credits" ? "number" : "text"}
+    <div className="container">
+      <h1>강의 수정</h1>
+      <Form>
+        {Object.keys(form).map(key => (
+          <Form.Group key={key} className="mb-2">
+            <Form.Label>{key}</Form.Label>
+            <Form.Control
+              type="text"
               name={key}
-              value={formData[key] || ""}
+              value={form[key]}
               onChange={handleChange}
             />
-          </div>
+          </Form.Group>
         ))}
-      </form>
+        <Button variant="primary" onClick={handleSubmit}>저장</Button>
+      </Form>
     </div>
   );
 }

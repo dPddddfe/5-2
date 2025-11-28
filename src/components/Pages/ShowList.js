@@ -9,18 +9,14 @@ import { API_URL } from "../../api";
 function ShowList() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [editCourse, setEditCourse] = useState(null); // 수정 대상
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const navigate = useNavigate();
 
   const fetchCourses = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch(API_URL);
-      if (res.ok) {
-        const data = await res.json();
-        setCourses(data);
-      }
+      if (res.ok) setCourses(await res.json());
     } catch (err) {
       console.error(err);
     } finally {
@@ -28,37 +24,24 @@ function ShowList() {
     }
   }, []);
 
-  useEffect(() => {
-    fetchCourses();
-  }, [fetchCourses]);
+  useEffect(() => { fetchCourses(); }, [fetchCourses]);
 
   const handleDelete = async (courseId) => {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
     try {
       const res = await fetch(`${API_URL}/${courseId}`, { method: "DELETE" });
       if (res.ok) fetchCourses();
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) { console.error(err); }
   };
 
-  const handleEdit = (course) => {
-    setEditCourse(course); // 수정할 데이터 저장
-    setShowModal(true);
-  };
-
-  const handleViewDetail = (course) => {
-    navigate(`/detail/${course.id}`);
-  };
+  const handleViewDetail = (course) => navigate(`/detail/${course.id}`);
+  const handleEdit = (course) => navigate(`/update/${course.id}`);
 
   return (
     <div className="container-fluid p-0">
       <Header />
       <h1>나의 수강 과목</h1>
-      <Button className="mb-3" onClick={() => { setEditCourse(null); setShowModal(true); }}>
-        + 강의 추가
-      </Button>
-
+      <Button className="mb-2" onClick={() => setShowCreateModal(true)}>+ 강의 추가</Button>
       <CourseTable
         courses={courses}
         loading={loading}
@@ -66,12 +49,10 @@ function ShowList() {
         onDelete={handleDelete}
         onViewDetail={handleViewDetail}
       />
-
       <CreateCourseModal
-        show={showModal}
-        handleClose={() => setShowModal(false)}
+        show={showCreateModal}
+        handleClose={() => setShowCreateModal(false)}
         fetchCourses={fetchCourses}
-        editCourse={editCourse} // 수정 대상 전달
       />
     </div>
   );
