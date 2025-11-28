@@ -1,3 +1,4 @@
+// src/components/Pages/ShowList.js
 import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +11,7 @@ function ShowList() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const fetchCourses = useCallback(async () => {
     setLoading(true);
@@ -41,7 +42,6 @@ function ShowList() {
     }
   };
 
-  // ✅ 상세보기 핸들러 정의
   const handleViewDetail = (course) => {
     navigate(`/detail/${course.id}`);
   };
@@ -56,12 +56,12 @@ function ShowList() {
       <h1>나의 수강 과목</h1>
       <Button onClick={() => setShowCreateModal(true)}>+ 강의 추가</Button>
 
-      <CourseTable 
-        courses={courses} 
-        loading={loading} 
+      <CourseTable
+        courses={courses}
+        loading={loading}
         onEdit={handleEdit}
         onDelete={handleDelete}
-        onViewDetail={handleViewDetail} // ✅ 핸들러 연결
+        onViewDetail={handleViewDetail}
       />
 
       <CreateCourseModal
