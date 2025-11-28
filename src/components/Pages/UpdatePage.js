@@ -8,7 +8,7 @@ function UpdatePage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
-  const editCountRef = useRef(0);
+  //const editCountRef = useRef(0);
 
   const fetchCourse = useCallback(async () => {
     if (!id) {
